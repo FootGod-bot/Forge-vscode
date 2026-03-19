@@ -7,7 +7,7 @@ import { State } from "../extension"
 import { findProjectFiles, ProjectFile } from "../findProjectFiles"
 import { getRojoInstall, InstallType, RojoInstall } from "../getRojoInstall"
 import { installPlugin } from "../installPlugin"
-import { installRojo } from "../installRojo"
+import { installRojo, installRojoWithRokit } from "../installRojo"
 import { result } from "../result"
 import { serveProject } from "../serveProject"
 import {
@@ -16,7 +16,7 @@ import {
   isExternalProject,
 } from "../projectDisplay"
 import { getConfigSetting, ThreeStateOption } from "../configuration"
-import which = require("which")
+import which from "which"
 
 const stopAndServeButton = {
   iconPath: new vscode.ThemeIcon("debug-continue"),
@@ -420,7 +420,7 @@ export const openMenuCommand = (state: State) =>
             },
             {
               label: "$(new-file) Create one now",
-              detail: "This will run the `rojo init` in your workspace folder.",
+              detail: "This will run the `forge init` in your workspace folder.",
               action: "create",
               projectFile: defaultProjectFile,
             },
@@ -583,17 +583,17 @@ export const openMenuCommand = (state: State) =>
 
           input.hide()
 
-          installRojo(folder)
+          installRojoWithRokit(folder)
             .then(() => {
               vscode.window.showInformationMessage(
-                "Successfully installed Rojo with Aftman!"
+                "Successfully installed Rojo with Rokit!"
               )
 
               vscode.commands.executeCommand("vscode-rojo.openMenu")
             })
             .catch((e) => {
               vscode.window.showErrorMessage(
-                `Couldn't install Rojo with Aftman: ${e}`
+                `Couldn't install Rojo with Rokit: ${e}`
               )
             })
 

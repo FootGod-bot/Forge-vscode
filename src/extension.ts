@@ -2,6 +2,7 @@ import * as vscode from "vscode"
 import * as commands from "./commands"
 import { RunningProject } from "./serveProject"
 import { updateButton } from "./updateButton"
+import { ForgePackagesProvider } from "./forgePackages"
 
 export type State = {
   resumeButton: vscode.StatusBarItem
@@ -38,6 +39,38 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     ...Object.values(commands).map((command) => command(state))
   )
+
+  // Register Forge Packages tree view
+  const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
+  if (workspaceFolder) {
+    const forgePackagesProvider = new ForgePackagesProvider(workspaceFolder.uri.fsPath)
+    vscode.window.registerTreeDataProvider('forgePackages', forgePackagesProvider)
+
+    // Register remove package command
+    const removePackageCommand = vscode.commands.registerCommand('vscode-forge.removePackage', async (packageItem) => {
+      if (packageItem) {
+        await forgePackagesProvider.removePackage(packageItem)
+      }
+    })
+    context.subscriptions.push(removePackageCommand)
+
+    // Register refresh command
+    const refreshCommand = vscode.commands.registerCommand('vscode-forge.refreshPackages', () => {
+      forgePackagesProvider.refresh()
+    })
+    context.subscriptions.push(refreshCommand)
+
+    // Register add package command
+    const addPackageCommand = vscode.commands.registerCommand('vscode-forge.addPackage', async () => {
+      await forgePackagesProvider.addPackage()
+    })
+    context.subscriptions.push(addPackageCommand)
+
+    // Dispose of the provider when extension deactivates
+    context.subscriptions.push({
+      dispose: () => forgePackagesProvider.dispose()
+    })
+  }
 
   configurationDisposable = vscode.workspace.onDidChangeConfiguration((event) => {
     if (event.affectsConfiguration("rojo.additionalProjectPaths")) {

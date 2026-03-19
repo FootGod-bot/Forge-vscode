@@ -1,10 +1,10 @@
 {
   "name": "vscode-rojo",
-  "displayName": "Rojo - Roblox Studio Sync",
-  "description": "Rojo for VS Code",
+  "displayName": "Forge - Roblox package manager built on rojo",
+  "description": "Forge for VS Code",
   "version": "2.1.2",
   "repository": "https://github.com/rojo-rbx/vscode-rojo",
-  "publisher": "evaera",
+  "publisher": "FootGod-Bot",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -14,7 +14,8 @@
   ],
   "activationEvents": [
     "onCommand:vscode-rojo.openMenu",
-    "workspaceContains:*.project.json"
+    "workspaceContains:*.project.json",
+    "onView:forgePackages"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -23,8 +24,62 @@
         "command": "vscode-rojo.openMenu",
         "title": "Open Menu",
         "category": "Rojo"
+      },
+      {
+        "command": "vscode-forge.addPackage",
+        "title": "Add a Package",
+        "category": "Forge",
+        "icon": "$(add)"
+      },
+      {
+        "command": "vscode-forge.removePackage",
+        "title": "Remove a Package",
+        "category": "Forge",
+        "icon": "$(close)"
+      },
+      {
+        "command": "vscode-forge.refreshPackages",
+        "title": "Refresh Packages",
+        "category": "Forge",
+        "icon": "$(refresh)"
       }
     ],
+    "views": {
+      "explorer": [
+        {
+          "id": "forgePackages",
+          "name": "Forge Packages",
+          "icon": "$(package)",
+          "contextualTitle": "Forge Packages"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-forge.addPackage",
+          "when": "view == forgePackages",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-forge.refreshPackages",
+          "when": "view == forgePackages",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-forge.removePackage",
+          "when": "view == forgePackages",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vscode-forge.removePackage",
+          "when": "view == forgePackages && viewItem == forgePackage",
+          "group": "7_modification"
+        }
+      ]
+    },
     "jsonValidation": [
       {
         "fileMatch": "*.project.json",

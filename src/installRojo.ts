@@ -8,7 +8,7 @@ import { Duplex, pipeline } from "stream"
 import * as unzipper from "unzipper"
 import { promisify } from "util"
 import * as vscode from "vscode"
-import * as which from "which"
+import which from "which"
 
 const exec = promisify(childProcess.exec)
 
@@ -210,5 +210,45 @@ export async function installRojo(folder: string) {
     await exec("aftman add rojo-rbx/rojo", {
       cwd: folder,
     })
+  }
+}
+
+export async function installRojoWithRokit(folder: string) {
+  try {
+    // Check if rokit is installed
+    const rokitPath = await which("rokit").catch(() => null)
+
+    if (!rokitPath) {
+      return Promise.reject(
+        "Rokit is not installed. Please install Rokit from https://github.com/rojo-rbx/rokit before using this installation method."
+      )
+    }
+
+    // Initialize rokit.toml if it doesn't exist
+    const rokitToml = await lstat(path.join(folder, "rokit.toml")).catch(
+      () => null
+    )
+
+    if (!rokitToml) {
+      await exec("rokit init", {
+        cwd: folder,
+      })
+    }
+
+    // Add/install Rojo using rokit
+    await exec("rokit add rojo", {
+      cwd: folder,
+    })
+
+    // Add Forge tool
+    await exec("rokit add FootGod-bot/Forge", {
+      cwd: folder,
+    })
+
+    vscode.window.showInformationMessage(
+      "Successfully installed Rojo with Rokit!"
+    )
+  } catch (e) {
+    return Promise.reject(e)
   }
 }
