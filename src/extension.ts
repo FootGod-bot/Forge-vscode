@@ -14,7 +14,22 @@ let cleanup: undefined | (() => void)
 let configurationDisposable: vscode.Disposable | undefined
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("vscode-rojo activated")
+  console.log("vscode-forge activated")
+
+  // Check if the official Rojo extension is installed
+  const rojoExtension = vscode.extensions.getExtension('evaera.vscode-rojo')
+  if (rojoExtension) {
+    vscode.window.showErrorMessage(
+      'Forge extension cannot be activated while the official Rojo extension is installed. ' +
+      'Please uninstall the official Rojo extension (evaera.vscode-rojo) before using Forge.',
+      'Open Extensions'
+    ).then(selection => {
+      if (selection === 'Open Extensions') {
+        vscode.commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', ['evaera.vscode-rojo'])
+      }
+    })
+    throw new Error('Official Rojo extension detected - Forge cannot activate')
+  }
 
   const state: State = {
     resumeButton: vscode.window.createStatusBarItem(

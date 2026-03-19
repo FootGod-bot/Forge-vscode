@@ -4,7 +4,7 @@
   "description": "Forge for VS Code",
   "version": "2.1.2",
   "repository": "https://github.com/rojo-rbx/vscode-rojo",
-  "publisher": "FootGod-Bot",
+  "publisher": "FootGod",
   "engines": {
     "vscode": "^1.63.0"
   },
