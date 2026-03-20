@@ -5,7 +5,7 @@ import * as vscode from "vscode"
 const exec = promisify(childProcess.exec)
 
 export async function createProjectFile(folder: string) {
-  const output = await exec("forge init", {
+  const output = await exec("crucible init", {
     cwd: folder,
   })
 

@@ -420,7 +420,7 @@ export const openMenuCommand = (state: State) =>
             },
             {
               label: "$(new-file) Create one now",
-              detail: "This will run the `forge init` in your workspace folder.",
+              detail: "This will run `crucible init` in your workspace folder.",
               action: "create",
               projectFile: defaultProjectFile,
             },

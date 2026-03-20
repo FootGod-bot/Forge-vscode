@@ -1,9 +1,9 @@
 {
-  "name": "vscode-rojo",
-  "displayName": "Forge - Roblox package manager built on rojo",
-  "description": "Forge for VS Code",
+  "name": "crucible",
+  "displayName": "Crucible - Roblox package manager built on rojo",
+  "description": "Crucible for VS Code",
   "version": "2.1.2",
-  "repository": "https://github.com/rojo-rbx/vscode-rojo",
+  "repository": "https://github.com/FootGod-bot/Crucible",
   "publisher": "FootGod",
   "engines": {
     "vscode": "^1.63.0"
@@ -15,7 +15,7 @@
   "activationEvents": [
     "onCommand:vscode-rojo.openMenu",
     "workspaceContains:*.project.json",
-    "onView:forgePackages"
+    "onView:cruciblePackages"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -26,56 +26,56 @@
         "category": "Rojo"
       },
       {
-        "command": "vscode-forge.addPackage",
+        "command": "vscode-crucible.addPackage",
         "title": "Add a Package",
-        "category": "Forge",
+        "category": "Crucible",
         "icon": "$(add)"
       },
       {
-        "command": "vscode-forge.removePackage",
+        "command": "vscode-crucible.removePackage",
         "title": "Remove a Package",
-        "category": "Forge",
+        "category": "Crucible",
         "icon": "$(close)"
       },
       {
-        "command": "vscode-forge.refreshPackages",
+        "command": "vscode-crucible.refreshPackages",
         "title": "Refresh Packages",
-        "category": "Forge",
+        "category": "Crucible",
         "icon": "$(refresh)"
       }
     ],
     "views": {
       "explorer": [
         {
-          "id": "forgePackages",
-          "name": "Forge Packages",
+          "id": "cruciblePackages",
+          "name": "Crucible Packages",
           "icon": "$(package)",
-          "contextualTitle": "Forge Packages"
+          "contextualTitle": "Crucible Packages"
         }
       ]
     },
     "menus": {
       "view/title": [
         {
-          "command": "vscode-forge.addPackage",
-          "when": "view == forgePackages",
+          "command": "vscode-crucible.addPackage",
+          "when": "view == cruciblePackages",
           "group": "navigation"
         },
         {
-          "command": "vscode-forge.refreshPackages",
-          "when": "view == forgePackages",
+          "command": "vscode-crucible.refreshPackages",
+          "when": "view == cruciblePackages",
           "group": "navigation"
         },
         {
-          "command": "vscode-forge.removePackage",
-          "when": "view == forgePackages",
+          "command": "vscode-crucible.removePackage",
+          "when": "view == cruciblePackages",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "vscode-forge.removePackage",
-          "when": "view == forgePackages && viewItem == forgePackage",
+          "command": "vscode-crucible.removePackage",
+          "when": "view == cruciblePackages && viewItem == cruciblePackage",
           "group": "7_modification"
         }
       ]

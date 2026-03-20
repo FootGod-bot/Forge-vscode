@@ -6,15 +6,15 @@ import * as childProcess from "child_process"
 
 const exec = promisify(childProcess.exec)
 
-export interface ForgePackage {
+export interface CruciblePackage {
   name: string
   id: string
   filePath: string
 }
 
-export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePackage> {
-  private _onDidChangeTreeData: vscode.EventEmitter<ForgePackage | undefined | null | void> = new vscode.EventEmitter<ForgePackage | undefined | null | void>()
-  readonly onDidChangeTreeData: vscode.Event<ForgePackage | undefined | null | void> = this._onDidChangeTreeData.event
+export class CruciblePackagesProvider implements vscode.TreeDataProvider<CruciblePackage> {
+  private _onDidChangeTreeData: vscode.EventEmitter<CruciblePackage | undefined | null | void> = new vscode.EventEmitter<CruciblePackage | undefined | null | void>()
+  readonly onDidChangeTreeData: vscode.Event<CruciblePackage | undefined | null | void> = this._onDidChangeTreeData.event
   private refreshInterval: NodeJS.Timeout | undefined
 
   constructor(private workspaceRoot: string) {
@@ -34,17 +34,17 @@ export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePacka
     this._onDidChangeTreeData.fire()
   }
 
-  getTreeItem(element: ForgePackage): vscode.TreeItem {
+  getTreeItem(element: CruciblePackage): vscode.TreeItem {
     return {
       label: element.name,
       tooltip: `Package: ${element.name}`,
-      contextValue: "forgePackage",
+      contextValue: "cruciblePackage",
       iconPath: new vscode.ThemeIcon("package"),
       command: undefined,
     }
   }
 
-  getChildren(element?: ForgePackage): Thenable<ForgePackage[]> {
+  getChildren(element?: CruciblePackage): Thenable<CruciblePackage[]> {
     if (!this.workspaceRoot) {
       return Promise.resolve([])
     }
@@ -53,29 +53,29 @@ export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePacka
       return Promise.resolve([])
     }
 
-    return this.getForgePackages()
+    return this.getCruciblePackages()
   }
 
-  private async getForgePackages(): Promise<ForgePackage[]> {
-    const forgeFolder = path.join(this.workspaceRoot, ".forge")
-    const logsFolder = path.join(forgeFolder, "logs")
+  private async getCruciblePackages(): Promise<CruciblePackage[]> {
+    const crucibleFolder = path.join(this.workspaceRoot, ".crucible")
+    const logsFolder = path.join(crucibleFolder, "logs")
 
     try {
       const files = await fs.readdir(logsFolder)
-      const jsonFiles = files.filter(file => file.endsWith('.json'))
+      const jsonFiles = files.filter(file => file.endsWith(".json"))
 
-      const packages: ForgePackage[] = []
+      const packages: CruciblePackage[] = []
 
       for (const file of jsonFiles) {
         try {
           const filePath = path.join(logsFolder, file)
-          const content = await fs.readFile(filePath, 'utf8')
+          const content = await fs.readFile(filePath, "utf8")
           const data = JSON.parse(content)
 
           if (data.name) {
             packages.push({
               name: data.name,
-              id: file.replace('.json', ''),
+              id: file.replace(".json", ""),
               filePath: filePath
             })
           }
@@ -87,14 +87,14 @@ export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePacka
 
       return packages
     } catch (error) {
-      // If .forge/logs doesn't exist, return empty array
+      // If .crucible/logs doesn't exist, return empty array
       return []
     }
   }
 
-  async removePackage(packageItem: ForgePackage): Promise<void> {
+  async removePackage(packageItem: CruciblePackage): Promise<void> {
     try {
-      await exec(`forge remove --silent ${packageItem.id}`, {
+      await exec(`crucible remove --silent ${packageItem.id}`, {
         cwd: this.workspaceRoot
       })
 
@@ -118,15 +118,15 @@ export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePacka
 
         // Check if it's a local path (starts with ./ or ../ or is an absolute path with letters/backslashes)
         const isLocalPath = /^\.[\\/]|^\.\.[\\/]|^[a-zA-Z]:[\\/]|^[\\/]/.test(value)
-        
+
         // Check if it's a URL (starts with http:// or https://)
         const isUrl = /^https?:\/\//.test(value)
-        
+
         // Check if it's in owner/repo format
         const isOwnerRepo = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(value)
 
         if (isLocalPath || isUrl || isOwnerRepo) {
-          return undefined // Valid
+          return undefined
         }
 
         return "Invalid format. Use local path (./), URL (http/https), or owner/repo format"
@@ -134,11 +134,11 @@ export class ForgePackagesProvider implements vscode.TreeDataProvider<ForgePacka
     })
 
     if (!input) {
-      return // User cancelled
+      return
     }
 
     try {
-      await exec(`forge add "${input}" --silent`, {
+      await exec(`crucible add "${input}" --silent`, {
         cwd: this.workspaceRoot
       })
 

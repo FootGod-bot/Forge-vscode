@@ -240,8 +240,8 @@ export async function installRojoWithRokit(folder: string) {
       cwd: folder,
     })
 
-    // Add Forge tool
-    await exec("rokit add FootGod-bot/Forge", {
+    // Add Crucible tool
+    await exec("rokit add FootGod-bot/crucible", {
       cwd: folder,
     })
 

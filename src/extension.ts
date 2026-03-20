@@ -2,7 +2,7 @@ import * as vscode from "vscode"
 import * as commands from "./commands"
 import { RunningProject } from "./serveProject"
 import { updateButton } from "./updateButton"
-import { ForgePackagesProvider } from "./forgePackages"
+import { CruciblePackagesProvider } from "./cruciblePackages"
 
 export type State = {
   resumeButton: vscode.StatusBarItem
@@ -14,21 +14,21 @@ let cleanup: undefined | (() => void)
 let configurationDisposable: vscode.Disposable | undefined
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("vscode-forge activated")
+  console.log("vscode-crucible activated")
 
   // Check if the official Rojo extension is installed
   const rojoExtension = vscode.extensions.getExtension('evaera.vscode-rojo')
   if (rojoExtension) {
     vscode.window.showErrorMessage(
-      'Forge extension cannot be activated while the official Rojo extension is installed. ' +
-      'Please uninstall the official Rojo extension (evaera.vscode-rojo) before using Forge.',
+      'Crucible cannot be activated while the official Rojo extension is installed. ' +
+      'Please uninstall the official Rojo extension (evaera.vscode-rojo) before using Crucible.',
       'Open Extensions'
     ).then(selection => {
       if (selection === 'Open Extensions') {
         vscode.commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', ['evaera.vscode-rojo'])
       }
     })
-    throw new Error('Official Rojo extension detected - Forge cannot activate')
+    throw new Error('Official Rojo extension detected - Crucible cannot activate')
   }
 
   const state: State = {
@@ -55,35 +55,35 @@ export function activate(context: vscode.ExtensionContext) {
     ...Object.values(commands).map((command) => command(state))
   )
 
-  // Register Forge Packages tree view
+  // Register Crucible Packages tree view
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
   if (workspaceFolder) {
-    const forgePackagesProvider = new ForgePackagesProvider(workspaceFolder.uri.fsPath)
-    vscode.window.registerTreeDataProvider('forgePackages', forgePackagesProvider)
+    const cruciblePackagesProvider = new CruciblePackagesProvider(workspaceFolder.uri.fsPath)
+    vscode.window.registerTreeDataProvider('cruciblePackages', cruciblePackagesProvider)
 
     // Register remove package command
-    const removePackageCommand = vscode.commands.registerCommand('vscode-forge.removePackage', async (packageItem) => {
+    const removePackageCommand = vscode.commands.registerCommand('vscode-crucible.removePackage', async (packageItem) => {
       if (packageItem) {
-        await forgePackagesProvider.removePackage(packageItem)
+        await cruciblePackagesProvider.removePackage(packageItem)
       }
     })
     context.subscriptions.push(removePackageCommand)
 
     // Register refresh command
-    const refreshCommand = vscode.commands.registerCommand('vscode-forge.refreshPackages', () => {
-      forgePackagesProvider.refresh()
+    const refreshCommand = vscode.commands.registerCommand('vscode-crucible.refreshPackages', () => {
+      cruciblePackagesProvider.refresh()
     })
     context.subscriptions.push(refreshCommand)
 
     // Register add package command
-    const addPackageCommand = vscode.commands.registerCommand('vscode-forge.addPackage', async () => {
-      await forgePackagesProvider.addPackage()
+    const addPackageCommand = vscode.commands.registerCommand('vscode-crucible.addPackage', async () => {
+      await cruciblePackagesProvider.addPackage()
     })
     context.subscriptions.push(addPackageCommand)
 
     // Dispose of the provider when extension deactivates
     context.subscriptions.push({
-      dispose: () => forgePackagesProvider.dispose()
+      dispose: () => cruciblePackagesProvider.dispose()
     })
   }
 
