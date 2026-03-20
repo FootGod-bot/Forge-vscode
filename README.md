@@ -42,9 +42,16 @@ You must click "Install Roblox Studio plugin" at least once if you want to live-
 
 ## System files
 
-This extension uses `rojo.exe` and `crucible.exe` in your path. If you get a error like the following, please know that is normal. Rokit needs you to trust a install first, and the extention does not do that
+This extension uses `rojo.exe` and `crucible.exe` in your path. If you get a error like the following, please know that is normal. Rokit needs you to trust a install first, and the extention does not do that.
 
 ![Error message](https://github.com/FootGod-bot/Forge-vscode/blob/main/assets/error-message.png?raw=true)
+
+To fix this error if you get it, run the following commands once, and trust the repo's
+
+```bash
+rokit add rojo
+rokit add footgod-bot/crucible
+```
 
 ## New install methods
 In the future I plan on adding a aftman method to install crucible.
