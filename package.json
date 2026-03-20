@@ -2,7 +2,7 @@
   "name": "crucible",
   "displayName": "Crucible - Roblox package manager built on rojo",
   "description": "Crucible for VS Code",
-  "version": "2.1.2",
+  "version": "2.0.0",
   "repository": "https://github.com/FootGod-bot/Crucible",
   "publisher": "FootGod",
   "engines": {
