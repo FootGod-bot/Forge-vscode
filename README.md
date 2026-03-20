@@ -3,14 +3,14 @@ This mod uses the source of the rojo vs-code extention, and slightly modifiys it
 # Rojo intigration
 Integrates [Rojo](https://github.com/rojo-rbx/rojo) natively with VS Code.
 
-![Rojo menu](https://i.eryn.io/2222/chrome-DdVyGHdh.png)
+![Rojo menu](https://github.com/FootGod-bot/Forge-vscode/blob/main/assets/rojo-menu.png?raw=true)
 
 All actions are performed via the Rojo menu, as seen above. To open the Rojo menu, either:
 
 - Open the Command Pallette (`Ctrl` + `Shift` + `P`) and type "Rojo: Open menu"
 - Use the Rojo button in the bottom right corner:
 
-![Rojo button](https://i.eryn.io/2222/dHvsUY6w.png)
+![Rojo button](https://github.com/FootGod-bot/Forge-vscode/blob/main/assets/rojo-button.png?raw=true)
 
 > Note: The Rojo button only appears if a folder in your workspace contains a `*.project.json` file.
 
